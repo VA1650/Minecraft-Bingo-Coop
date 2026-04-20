@@ -1,0 +1,15 @@
+name: Bingo
+version: 1.0
+main: annie312.bingo.Bingo
+api-version: 1.21
+description: Bingo game plugin.
+author: Annie312
+commands:
+  bingo:
+    description: Starts a new Bingo game.
+    usage: /bingo
+
+permissions:
+  bingo.use:
+    description: Allows players to use the /bingo command.
+    default: op
