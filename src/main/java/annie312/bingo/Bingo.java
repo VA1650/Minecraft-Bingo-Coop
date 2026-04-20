@@ -12,12 +12,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public final class Bingo extends JavaPlugin implements Listener {
 
@@ -39,25 +40,67 @@ public final class Bingo extends JavaPlugin implements Listener {
             player.sendMessage(Component.text("/bingo random [число] - Рандом блоков", NamedTextColor.LIGHT_PURPLE));
             player.sendMessage(Component.text("/bingo list - Список всех целей в чат", NamedTextColor.AQUA));
             player.sendMessage(Component.text("/bingo start - НАЧАТЬ ИГРУ", NamedTextColor.GREEN, TextDecoration.BOLD));
+            player.sendMessage(Component.text("/bingo stop - Закончить игру", NamedTextColor.RED));
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "pick" -> {
-                isGameActive = false;
+                if (isGameActive) {
+                    player.sendMessage(Component.text("Нельзя менять цели во время игры! Сначала /bingo stop", NamedTextColor.RED));
+                    return true;
+                }
                 commonObjectives.clear();
-                Bukkit.broadcast(Component.text("Режим выбора включен! Все игроки в Креативе.", NamedTextColor.AQUA));
+                Bukkit.broadcast(Component.text("Режим выбора включен! Инвентари очищены.", NamedTextColor.AQUA));
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.setGameMode(GameMode.CREATIVE);
+                    p.getInventory().clear();
                     updateGlobalScoreboard();
                 }
             }
             case "random" -> {
-                isGameActive = false;
-                int count = (args.length > 1) ? Integer.parseInt(args[1]) : 5;
+                if (isGameActive) {
+                    player.sendMessage(Component.text("Нельзя рандомить цели во время игры!", NamedTextColor.RED));
+                    return true;
+                }
+
+                int count = 5;
+                if (args.length > 1) {
+                    try {
+                        count = Integer.parseInt(args[1]);
+                        if (count <= 0) {
+                            player.sendMessage(Component.text("Число должно быть больше 0!", NamedTextColor.RED));
+                            return true;
+                        }
+                        if (count > 200) {
+                            player.sendMessage(Component.text("Слишком много! Максимум 200.", NamedTextColor.RED));
+                            return true;
+                        }
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(Component.text("Ошибка: '" + args[1] + "' — это не число!", NamedTextColor.RED));
+                        return true;
+                    }
+                }
+
                 generateRandomObjectives(count);
-                Bukkit.broadcast(Component.text("Сгенерировано " + count + " случайных целей!", NamedTextColor.LIGHT_PURPLE));
                 updateGlobalScoreboard();
+                Bukkit.broadcast(Component.text("Сгенерировано " + count + " рандомных целей!", NamedTextColor.LIGHT_PURPLE));
+            }
+            case "stop" -> {
+                if (!isGameActive && commonObjectives.isEmpty()) {
+                    player.sendMessage(Component.text("Игра не запущена!", NamedTextColor.RED));
+                    return true;
+                }
+                isGameActive = false;
+                commonObjectives.clear();
+
+                Bukkit.broadcast(Component.text("ИГРА ПРЕРВАНА АДМИНИСТРАТОРОМ!", NamedTextColor.RED, TextDecoration.BOLD));
+                Bukkit.broadcast(Component.text("Все цели удалены.", NamedTextColor.GRAY));
+
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    p.setGameMode(GameMode.CREATIVE);
+                    updateGlobalScoreboard();
+                }
             }
             case "list" -> {
                 if (commonObjectives.isEmpty()) {
@@ -72,6 +115,10 @@ public final class Bingo extends JavaPlugin implements Listener {
             case "start" -> {
                 if (commonObjectives.isEmpty()) {
                     player.sendMessage(Component.text("Сначала выберите предметы!", NamedTextColor.RED));
+                    return true;
+                }
+                if (isGameActive) {
+                    player.sendMessage(Component.text("Игра уже запущена", NamedTextColor.RED));
                     return true;
                 }
                 isGameActive = true;
@@ -118,7 +165,7 @@ public final class Bingo extends JavaPlugin implements Listener {
     }
 
     @EventHandler
-    public void onJoin() {
+    public void onJoin(PlayerJoinEvent ignoredE) {
         updateGlobalScoreboard();
     }
 
@@ -148,12 +195,24 @@ public final class Bingo extends JavaPlugin implements Listener {
 
     private void generateRandomObjectives(int count) {
         List<Material> allBlocks = Arrays.stream(Material.values())
-                .filter(m -> m.isBlock() && m.isItem() && !m.isAir() && !m.name().contains("LEGACY"))
-                .filter(m -> !m.name().contains("COMMAND") && !m.name().contains("STRUCTURE") && !m.name().contains("BARRIER"))
-                .toList();
+                .filter(m -> m.isBlock() && m.isItem() && !m.isAir()
+                        && !m.name().contains("LEGACY")
+                        && !m.name().contains("COMMAND")
+                        && !m.name().contains("STRUCTURE")
+                        && !m.name().contains("BARRIER")
+                        && !m.name().contains("JIGSAW")
+                        && !m.name().contains("DEBUG")
+                        && !m.name().contains("VOID")
+                        && !m.name().contains("LIGHT")
+                )
+                .collect(Collectors.toList());
+
         commonObjectives.clear();
-        while (commonObjectives.size() < Math.min(count, allBlocks.size())) {
-            commonObjectives.add(allBlocks.get(ThreadLocalRandom.current().nextInt(allBlocks.size())));
+
+        Collections.shuffle(allBlocks);
+        int actualCount = Math.min(count, allBlocks.size());
+        for (int i = 0; i < actualCount; i++) {
+            commonObjectives.add(allBlocks.get(i));
         }
     }
 
@@ -161,8 +220,12 @@ public final class Bingo extends JavaPlugin implements Listener {
         Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
         Objective obj = board.getObjective("bingo");
         if (obj != null) obj.unregister();
+
+        if (commonObjectives.isEmpty()) return;
+
         obj = board.registerNewObjective("bingo", Criteria.DUMMY, Component.text("= BINGO CO-OP =", NamedTextColor.GOLD, TextDecoration.BOLD));
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+
         int i = 0;
         for (Material m : commonObjectives) {
             if (i++ > 14) break;
