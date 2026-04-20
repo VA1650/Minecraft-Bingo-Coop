@@ -35,8 +35,8 @@ rd /s /q "world_nether"
 rd /s /q "world_the_end"
 java -Xmx2G -jar your-paper-file.jar nogui
 pause
-
-##📝 Как установить
+```
+## 📝 Как установить
 
 *    Скомпилируйте проект в .jar файл.
 
