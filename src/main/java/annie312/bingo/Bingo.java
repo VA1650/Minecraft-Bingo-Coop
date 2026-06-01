@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -24,6 +25,10 @@ public final class Bingo extends JavaPlugin implements Listener {
 
     private final Set<Material> commonObjectives = new HashSet<>();
     private boolean isGameActive = false;
+
+    // Переменные для таймера
+    private long gameStartTime = 0;
+    private BukkitTask timerTask = null;
 
     @Override
     public void onEnable() {
@@ -94,6 +99,9 @@ public final class Bingo extends JavaPlugin implements Listener {
                 isGameActive = false;
                 commonObjectives.clear();
 
+                // Остановка таймера принудительно
+                stopTimer();
+
                 Bukkit.broadcast(Component.text("ИГРА ПРЕРВАНА АДМИНИСТРАТОРОМ!", NamedTextColor.RED, TextDecoration.BOLD));
                 Bukkit.broadcast(Component.text("Все цели удалены.", NamedTextColor.GRAY));
 
@@ -122,6 +130,11 @@ public final class Bingo extends JavaPlugin implements Listener {
                     return true;
                 }
                 isGameActive = true;
+
+                // Запуск отсчета времени
+                gameStartTime = System.currentTimeMillis();
+                startTimer();
+
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.getInventory().clear();
                     p.setGameMode(GameMode.SURVIVAL);
@@ -234,9 +247,49 @@ public final class Bingo extends JavaPlugin implements Listener {
         for (Player p : Bukkit.getOnlinePlayers()) p.setScoreboard(board);
     }
 
+    // Вспомогательный метод форматирования времени (00:00)
+    private String formatTime(long secondsTotal) {
+        long minutes = secondsTotal / 60;
+        long seconds = secondsTotal % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    private void startTimer() {
+        stopTimer(); // На всякий случай сбрасываем старый таск
+        timerTask = Bukkit.getScheduler().runTaskTimer(this, () -> {
+            if (!isGameActive) {
+                stopTimer();
+                return;
+            }
+            long passedSeconds = (System.currentTimeMillis() - gameStartTime) / 1000;
+            Component timeComponent = Component.text("Прошло времени: ", NamedTextColor.YELLOW)
+                    .append(Component.text(formatTime(passedSeconds), NamedTextColor.WHITE, TextDecoration.BOLD));
+
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                p.sendActionBar(timeComponent);
+            }
+        }, 0L, 20L); // Обновление раз в секунду (20 тиков)
+    }
+
+    private void stopTimer() {
+        if (timerTask != null) {
+            timerTask.cancel();
+            timerTask = null;
+        }
+    }
+
     private void finishGame() {
         isGameActive = false;
+
+        // Считаем финальное время
+        long totalSeconds = (System.currentTimeMillis() - gameStartTime) / 1000;
+        stopTimer();
+
         Bukkit.broadcast(Component.text("ПОБЕДА! ВЕСЬ СПИСОК СОБРАН!", NamedTextColor.GREEN, TextDecoration.BOLD));
+        // Вывод потраченного времени в чат
+        Bukkit.broadcast(Component.text("Затраченное время: ", NamedTextColor.GOLD)
+                .append(Component.text(formatTime(totalSeconds), NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD)));
+
         Bukkit.getScheduler().runTaskLater(this, () -> {
             for (Player p : Bukkit.getOnlinePlayers()) p.kick(Component.text("Мир пересоздается!"));
             Bukkit.shutdown();
