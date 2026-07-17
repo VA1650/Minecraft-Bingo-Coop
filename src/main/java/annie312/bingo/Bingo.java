@@ -1,298 +1,84 @@
 package annie312.bingo;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.*;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
+
+import annie312.bingo.listener.BingoListener;
+import annie312.bingo.listener.CreativeListener;
+
+import annie312.bingo.manager.*;
+
+
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.*;
-import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-public final class Bingo extends JavaPlugin implements Listener {
 
-    private final Set<Material> commonObjectives = new HashSet<>();
-    private boolean isGameActive = false;
+public final class Bingo extends JavaPlugin {
 
-    // Переменные для таймера
-    private long gameStartTime = 0;
-    private BukkitTask timerTask = null;
 
     @Override
-    public void onEnable() {
-        getServer().getPluginManager().registerEvents(this, this);
+    public void onEnable(){
+
+
+        ObjectiveManager objectiveManager = new ObjectiveManager();
+
+
+        BingoScoreboard scoreboard = new BingoScoreboard(
+                objectiveManager
+        );
+
+
+        TimerManager timer = new TimerManager(
+                this
+        );
+
+
+        GameManager gameManager = new GameManager(
+                this,
+                objectiveManager,
+                scoreboard,
+                timer
+        );
+
+
+
+        Objects.requireNonNull(getCommand("bingo"))
+                .setExecutor(gameManager);
+
+
+
+        getServer()
+                .getPluginManager()
+                .registerEvents(
+
+                        new BingoListener(
+                                gameManager,
+                                objectiveManager,
+                                scoreboard
+                        ),
+
+                        this
+                );
+
+
+
+        getServer()
+                .getPluginManager()
+                .registerEvents(
+
+                        new CreativeListener(
+                                objectiveManager,
+                                scoreboard
+                        ),
+
+                        this
+                );
+
+
+
+        getLogger()
+                .info("Bingo 2.0 started!");
+
     }
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) return true;
 
-        if (args.length == 0) {
-            player.sendMessage(Component.text("--- BINGO CO-OP ---", NamedTextColor.GOLD, TextDecoration.BOLD));
-            player.sendMessage(Component.text("/bingo pick - Выбор целей (Креатив)", NamedTextColor.YELLOW));
-            player.sendMessage(Component.text("/bingo random [число] - Рандом блоков", NamedTextColor.LIGHT_PURPLE));
-            player.sendMessage(Component.text("/bingo list - Список всех целей в чат", NamedTextColor.AQUA));
-            player.sendMessage(Component.text("/bingo start - НАЧАТЬ ИГРУ", NamedTextColor.GREEN, TextDecoration.BOLD));
-            player.sendMessage(Component.text("/bingo stop - Закончить игру", NamedTextColor.RED));
-            return true;
-        }
-
-        switch (args[0].toLowerCase()) {
-            case "pick" -> {
-                if (isGameActive) {
-                    player.sendMessage(Component.text("Нельзя менять цели во время игры! Сначала /bingo stop", NamedTextColor.RED));
-                    return true;
-                }
-                commonObjectives.clear();
-                Bukkit.broadcast(Component.text("Режим выбора включен! Инвентари очищены.", NamedTextColor.AQUA));
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.setGameMode(GameMode.CREATIVE);
-                    p.getInventory().clear();
-                    updateGlobalScoreboard();
-                }
-            }
-            case "random" -> {
-                if (isGameActive) {
-                    player.sendMessage(Component.text("Нельзя рандомить цели во время игры!", NamedTextColor.RED));
-                    return true;
-                }
-
-                int count = 5;
-                if (args.length > 1) {
-                    try {
-                        count = Integer.parseInt(args[1]);
-                        if (count <= 0) {
-                            player.sendMessage(Component.text("Число должно быть больше 0!", NamedTextColor.RED));
-                            return true;
-                        }
-                        if (count > 200) {
-                            player.sendMessage(Component.text("Слишком много! Максимум 200.", NamedTextColor.RED));
-                            return true;
-                        }
-                    } catch (NumberFormatException e) {
-                        player.sendMessage(Component.text("Ошибка: '" + args[1] + "' — это не число!", NamedTextColor.RED));
-                        return true;
-                    }
-                }
-
-                generateRandomObjectives(count);
-                updateGlobalScoreboard();
-                Bukkit.broadcast(Component.text("Сгенерировано " + count + " рандомных целей!", NamedTextColor.LIGHT_PURPLE));
-            }
-            case "stop" -> {
-                if (!isGameActive && commonObjectives.isEmpty()) {
-                    player.sendMessage(Component.text("Игра не запущена!", NamedTextColor.RED));
-                    return true;
-                }
-                isGameActive = false;
-                commonObjectives.clear();
-
-                // Остановка таймера принудительно
-                stopTimer();
-
-                Bukkit.broadcast(Component.text("ИГРА ПРЕРВАНА АДМИНИСТРАТОРОМ!", NamedTextColor.RED, TextDecoration.BOLD));
-                Bukkit.broadcast(Component.text("Все цели удалены.", NamedTextColor.GRAY));
-
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.setGameMode(GameMode.CREATIVE);
-                    updateGlobalScoreboard();
-                }
-            }
-            case "list" -> {
-                if (commonObjectives.isEmpty()) {
-                    player.sendMessage(Component.text("Целей пока нет.", NamedTextColor.RED));
-                    return true;
-                }
-                player.sendMessage(Component.text("--- ТЕКУЩИЕ ЦЕЛИ ---", NamedTextColor.GOLD));
-                for (Material m : commonObjectives) {
-                    player.sendMessage(Component.text("- ", NamedTextColor.GRAY).append(Component.translatable(m.translationKey(), NamedTextColor.WHITE)));
-                }
-            }
-            case "start" -> {
-                if (commonObjectives.isEmpty()) {
-                    player.sendMessage(Component.text("Сначала выберите предметы!", NamedTextColor.RED));
-                    return true;
-                }
-                if (isGameActive) {
-                    player.sendMessage(Component.text("Игра уже запущена", NamedTextColor.RED));
-                    return true;
-                }
-                isGameActive = true;
-
-                // Запуск отсчета времени
-                gameStartTime = System.currentTimeMillis();
-                startTimer();
-
-                for (Player p : Bukkit.getOnlinePlayers()) {
-                    p.getInventory().clear();
-                    p.setGameMode(GameMode.SURVIVAL);
-                }
-                Bukkit.broadcast(Component.text("ИГРА НАЧАЛАСЬ! Удачи команде!", NamedTextColor.GOLD, TextDecoration.BOLD));
-                updateGlobalScoreboard();
-            }
-        }
-        return true;
-    }
-
-    @EventHandler
-    public void onDrop(PlayerDropItemEvent e) {
-        if (!isGameActive && commonObjectives.contains(e.getItemDrop().getItemStack().getType())) {
-            Material dropped = e.getItemDrop().getItemStack().getType();
-            commonObjectives.remove(dropped);
-
-            Bukkit.broadcast(Component.text("Цель удалена: ", NamedTextColor.RED)
-                    .append(Component.translatable(dropped.translationKey()))
-                    .append(Component.text(" (убрал " + e.getPlayer().getName() + ")", NamedTextColor.GRAY)));
-
-            updateGlobalScoreboard();
-            e.getItemDrop().remove();
-        }
-    }
-
-    @EventHandler
-    public void onCreativeClick(InventoryCreativeEvent event) {
-        if (!isGameActive) {
-            Material type = event.getCursor().getType();
-            if (type != Material.AIR && !commonObjectives.contains(type)) {
-                commonObjectives.add(type);
-
-                Bukkit.broadcast(Component.text("Добавлена цель: ", NamedTextColor.AQUA)
-                        .append(Component.translatable(type.translationKey(), NamedTextColor.WHITE))
-                        .append(Component.text(" (выбрал " + event.getWhoClicked().getName() + ")", NamedTextColor.GRAY)));
-
-                updateGlobalScoreboard();
-            }
-        }
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent ignoredE) {
-        updateGlobalScoreboard();
-    }
-
-    private void checkInventory(Player player) {
-        if (!isGameActive || commonObjectives.isEmpty()) return;
-        boolean changed = false;
-        Iterator<Material> it = commonObjectives.iterator();
-        while (it.hasNext()) {
-            Material m = it.next();
-            if (player.getInventory().contains(m)) {
-                it.remove();
-                Bukkit.broadcast(Component.text("НАЙДЕНО: ", NamedTextColor.GOLD)
-                        .append(Component.translatable(m.translationKey(), NamedTextColor.GREEN, TextDecoration.BOLD))
-                        .append(Component.text(" (добыл " + player.getName() + ")", NamedTextColor.WHITE)));
-                changed = true;
-            }
-        }
-        if (changed) {
-            if (commonObjectives.isEmpty()) finishGame();
-            else updateGlobalScoreboard();
-        }
-    }
-
-    @EventHandler public void onPickup(PlayerAttemptPickupItemEvent e) { Bukkit.getScheduler().runTaskLater(this, () -> checkInventory(e.getPlayer()), 1L); }
-    @EventHandler public void onInvClick(InventoryClickEvent e) { if (e.getWhoClicked() instanceof Player p) Bukkit.getScheduler().runTaskLater(this, () -> checkInventory(p), 1L); }
-    @EventHandler public void onCraft(CraftItemEvent e) { Bukkit.getScheduler().runTaskLater(this, () -> checkInventory((Player) e.getWhoClicked()), 1L); }
-
-    private void generateRandomObjectives(int count) {
-        List<Material> allBlocks = Arrays.stream(Material.values())
-                .filter(m -> m.isBlock() && m.isItem() && !m.isAir()
-                        && !m.name().contains("LEGACY")
-                        && !m.name().contains("COMMAND")
-                        && !m.name().contains("STRUCTURE")
-                        && !m.name().contains("BARRIER")
-                        && !m.name().contains("JIGSAW")
-                        && !m.name().contains("DEBUG")
-                        && !m.name().contains("VOID")
-                        && !m.name().contains("LIGHT")
-                )
-                .collect(Collectors.toList());
-
-        commonObjectives.clear();
-
-        Collections.shuffle(allBlocks);
-        int actualCount = Math.min(count, allBlocks.size());
-        for (int i = 0; i < actualCount; i++) {
-            commonObjectives.add(allBlocks.get(i));
-        }
-    }
-
-    private void updateGlobalScoreboard() {
-        Scoreboard board = Bukkit.getScoreboardManager().getMainScoreboard();
-        Objective obj = board.getObjective("bingo");
-        if (obj != null) obj.unregister();
-
-        if (commonObjectives.isEmpty()) return;
-
-        obj = board.registerNewObjective("bingo", Criteria.DUMMY, Component.text("= BINGO CO-OP =", NamedTextColor.GOLD, TextDecoration.BOLD));
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        int i = 0;
-        for (Material m : commonObjectives) {
-            if (i++ > 14) break;
-            obj.getScore("§f" + m.name().toLowerCase().replace("_", " ")).setScore(commonObjectives.size() - i);
-        }
-        for (Player p : Bukkit.getOnlinePlayers()) p.setScoreboard(board);
-    }
-
-    // Вспомогательный метод форматирования времени (00:00)
-    private String formatTime(long secondsTotal) {
-        long minutes = secondsTotal / 60;
-        long seconds = secondsTotal % 60;
-        return String.format("%02d:%02d", minutes, seconds);
-    }
-
-    private void startTimer() {
-        stopTimer(); // На всякий случай сбрасываем старый таск
-        timerTask = Bukkit.getScheduler().runTaskTimer(this, () -> {
-            if (!isGameActive) {
-                stopTimer();
-                return;
-            }
-            long passedSeconds = (System.currentTimeMillis() - gameStartTime) / 1000;
-            Component timeComponent = Component.text("Прошло времени: ", NamedTextColor.YELLOW)
-                    .append(Component.text(formatTime(passedSeconds), NamedTextColor.WHITE, TextDecoration.BOLD));
-
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                p.sendActionBar(timeComponent);
-            }
-        }, 0L, 20L); // Обновление раз в секунду (20 тиков)
-    }
-
-    private void stopTimer() {
-        if (timerTask != null) {
-            timerTask.cancel();
-            timerTask = null;
-        }
-    }
-
-    private void finishGame() {
-        isGameActive = false;
-
-        // Считаем финальное время
-        long totalSeconds = (System.currentTimeMillis() - gameStartTime) / 1000;
-        stopTimer();
-
-        Bukkit.broadcast(Component.text("ПОБЕДА! ВЕСЬ СПИСОК СОБРАН!", NamedTextColor.GREEN, TextDecoration.BOLD));
-        // Вывод потраченного времени в чат
-        Bukkit.broadcast(Component.text("Затраченное время: ", NamedTextColor.GOLD)
-                .append(Component.text(formatTime(totalSeconds), NamedTextColor.LIGHT_PURPLE, TextDecoration.BOLD)));
-
-        Bukkit.getScheduler().runTaskLater(this, () -> {
-            for (Player p : Bukkit.getOnlinePlayers()) p.kick(Component.text("Мир пересоздается!"));
-            Bukkit.shutdown();
-        }, 200L);
-    }
 }
