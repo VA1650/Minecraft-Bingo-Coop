@@ -4,10 +4,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7028b7e9-506f-4c6b-9567-346908f86d21" name="Changes" comment="множественные фиксы">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="7028b7e9-506f-4c6b-9567-346908f86d21" name="Changes" comment="Добавлено отслеживание времени игры">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/Bingo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/Bingo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/advancements/064f2fb1-0c3b-328d-861d-31fbdf802dac.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/advancements/7adf6fbd-04a4-3aeb-a1e4-7e600f34c0cf.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/advancements/aefdca51-d48a-3427-920a-16cd3d47b34a.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/data/villages.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/data/villages_end.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/data/villages_nether.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/level.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/level.dat_old" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/playerdata/064f2fb1-0c3b-328d-861d-31fbdf802dac.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/playerdata/7adf6fbd-04a4-3aeb-a1e4-7e600f34c0cf.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/playerdata/aefdca51-d48a-3427-920a-16cd3d47b34a.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/region/r.-1.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/region/r.-1.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/region/r.-1.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/region/r.0.-1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/region/r.0.0.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/region/r.0.1.mca" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/session.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/stats/064f2fb1-0c3b-328d-861d-31fbdf802dac.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/stats/7adf6fbd-04a4-3aeb-a1e4-7e600f34c0cf.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/stats/aefdca51-d48a-3427-920a-16cd3d47b34a.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/world/uid.dat" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,13 +55,7 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Bingo" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="Bingo" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
+                <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
             <select />
@@ -128,11 +142,20 @@
       <option name="project" value="LOCAL" />
       <updated>1776697912238</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Добавлено отслеживание времени игры">
+      <option name="closed" value="true" />
+      <created>1780347749302</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1780347749302</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="множественные фиксы" />
-    <option name="LAST_COMMIT_MESSAGE" value="множественные фиксы" />
+    <MESSAGE value="Добавлено отслеживание времени игры" />
+    <option name="LAST_COMMIT_MESSAGE" value="Добавлено отслеживание времени игры" />
   </component>
 </project>
