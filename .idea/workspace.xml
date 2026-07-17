@@ -4,30 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7028b7e9-506f-4c6b-9567-346908f86d21" name="Changes" comment="Добавлено отслеживание времени игры">
+    <list default="true" id="7028b7e9-506f-4c6b-9567-346908f86d21" name="Changes" comment="удалена лишняя папка">
+      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/BingoListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/CreativeListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/BingoScoreboard.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/GameManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/ObjectiveManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/objective/BingoObjective.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/advancements/064f2fb1-0c3b-328d-861d-31fbdf802dac.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/advancements/7adf6fbd-04a4-3aeb-a1e4-7e600f34c0cf.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/advancements/aefdca51-d48a-3427-920a-16cd3d47b34a.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/data/villages.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/data/villages_end.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/data/villages_nether.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/level.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/level.dat_old" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/playerdata/064f2fb1-0c3b-328d-861d-31fbdf802dac.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/playerdata/7adf6fbd-04a4-3aeb-a1e4-7e600f34c0cf.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/playerdata/aefdca51-d48a-3427-920a-16cd3d47b34a.dat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/region/r.-1.-1.mca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/region/r.-1.0.mca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/region/r.-1.1.mca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/region/r.0.-1.mca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/region/r.0.0.mca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/region/r.0.1.mca" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/session.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/stats/064f2fb1-0c3b-328d-861d-31fbdf802dac.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/stats/7adf6fbd-04a4-3aeb-a1e4-7e600f34c0cf.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/stats/aefdca51-d48a-3427-920a-16cd3d47b34a.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/world/uid.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/Bingo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/Bingo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +42,11 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Bingo" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Bingo" type="f1a62948:ProjectNode" />
                 <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
@@ -63,6 +55,13 @@
         </projects_view>
       </state>
     </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -91,13 +90,15 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Gradle.Bingo [build].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Bingo [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Bingo [dependencies].executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Gradle.Bingo [build]">
     <configuration name="Bingo [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -120,9 +121,55 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration name="Bingo [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="Bingo [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="dependencies" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.Bingo [build]" />
+        <item itemvalue="Gradle.Bingo [clean]" />
+        <item itemvalue="Gradle.Bingo [dependencies]" />
       </list>
     </recent_temporary>
   </component>
@@ -150,12 +197,21 @@
       <option name="project" value="LOCAL" />
       <updated>1780347749302</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="удалена лишняя папка">
+      <option name="closed" value="true" />
+      <created>1784312150946</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1784312150946</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="множественные фиксы" />
     <MESSAGE value="Добавлено отслеживание времени игры" />
-    <option name="LAST_COMMIT_MESSAGE" value="Добавлено отслеживание времени игры" />
+    <MESSAGE value="удалена лишняя папка" />
+    <option name="LAST_COMMIT_MESSAGE" value="удалена лишняя папка" />
   </component>
 </project>
