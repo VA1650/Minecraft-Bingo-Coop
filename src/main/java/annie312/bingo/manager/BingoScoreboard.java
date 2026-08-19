@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ import java.util.Map;
 public class BingoScoreboard {
 
 
+    private final GameManager gameManager;
     private final ObjectiveManager objectives;
 
 
@@ -33,9 +33,11 @@ public class BingoScoreboard {
 
 
     public BingoScoreboard(
+            GameManager gameManager,
             ObjectiveManager objectives
     ){
 
+        this.gameManager = gameManager;
         this.objectives = objectives;
 
 
@@ -134,22 +136,33 @@ public class BingoScoreboard {
 
 
 
-        counter.prefix(
-                Component.text(
-                                "Осталось: "
-                        )
-                        .color(
-                                NamedTextColor.YELLOW
-                        )
-                        .append(
-                                Component.text(
-                                                objectives.remaining()
-                                        )
-                                        .color(
-                                                NamedTextColor.WHITE
-                                        )
-                        )
-        );
+        if(gameManager.isNotActive()){
+            counter.prefix(
+                    Component.text(
+                                    "Ожидание игры"
+                            )
+                            .color(
+                                    NamedTextColor.GRAY
+                            )
+            );
+        } else {
+            counter.prefix(
+                    Component.text(
+                                    "Осталось: "
+                            )
+                            .color(
+                                    NamedTextColor.YELLOW
+                            )
+                            .append(
+                                    Component.text(
+                                                    objectives.remaining()
+                                            )
+                                            .color(
+                                                    NamedTextColor.WHITE
+                                            )
+                            )
+            );
+        }
 
 
 
@@ -232,12 +245,6 @@ public class BingoScoreboard {
         }
 
     }
-
-
-
-
-
-
 
 
     private void send(){
