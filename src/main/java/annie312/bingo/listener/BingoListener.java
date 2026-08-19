@@ -124,11 +124,12 @@ public class BingoListener implements Listener {
 
 
 
-        boolean completed =
-                objectives.complete(
-                        material,
-                        player.getUniqueId()
-                );
+        if(!gameManager.isPlayerAtStart(player.getUniqueId()))
+            return;
+
+
+
+        boolean completed = objectives.complete(material);
 
 
 
