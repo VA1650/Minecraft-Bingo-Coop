@@ -2,6 +2,7 @@ package annie312.bingo.listener;
 
 
 import annie312.bingo.manager.BingoScoreboard;
+import annie312.bingo.manager.GameManager;
 import annie312.bingo.manager.ObjectiveManager;
 
 
@@ -10,6 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,29 +20,26 @@ import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
 
-
 public class CreativeListener implements Listener {
 
 
+    private final GameManager gameManager;
     private final ObjectiveManager objectives;
     private final BingoScoreboard scoreboard;
 
 
 
     public CreativeListener(
+            GameManager gameManager,
             ObjectiveManager objectives,
             BingoScoreboard scoreboard
     ){
 
+        this.gameManager = gameManager;
         this.objectives = objectives;
         this.scoreboard = scoreboard;
 
     }
-
-
-
-
-
 
 
     @EventHandler
@@ -48,9 +47,13 @@ public class CreativeListener implements Listener {
             InventoryCreativeEvent event
     ){
 
+        Player player = (Player) event.getWhoClicked();
 
         if(!(event.getWhoClicked()
-                instanceof Player))
+                instanceof Player) || !(player.getGameMode() == GameMode.CREATIVE))
+            return;
+
+        if(!gameManager.isNotActive())
             return;
 
 
@@ -114,6 +117,15 @@ public class CreativeListener implements Listener {
     public void onDrop(
             PlayerDropItemEvent event
     ){
+
+        Player player = event.getPlayer();
+
+        if(!(player.getGameMode() == GameMode.CREATIVE))
+            return;
+
+
+        if(!gameManager.isNotActive())
+            return;
 
 
         Material material =

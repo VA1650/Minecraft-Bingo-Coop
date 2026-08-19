@@ -4,17 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7028b7e9-506f-4c6b-9567-346908f86d21" name="Changes" comment="удалена лишняя папка">
-      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/BingoListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/CreativeListener.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/BingoScoreboard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/GameManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/ObjectiveManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/objective/BingoObjective.java" afterDir="false" />
+    <list default="true" id="7028b7e9-506f-4c6b-9567-346908f86d21" name="Changes" comment="улучшен дизайн">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/Bingo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/Bingo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/BingoListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/BingoListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/CreativeListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/listener/CreativeListener.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/BingoScoreboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/BingoScoreboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/GameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/GameManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/ObjectiveManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/manager/ObjectiveManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/annie312/bingo/objective/BingoObjective.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annie312/bingo/objective/BingoObjective.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +41,12 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Bingo" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Bingo" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -89,6 +93,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Gradle.Bingo [buildDependents].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Bingo [build].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Bingo [clean].executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Bingo [dependencies].executor&quot;: &quot;Run&quot;,
@@ -99,6 +104,28 @@
   }
 }</component>
   <component name="RunManager" selected="Gradle.Bingo [build]">
+    <configuration name="Bingo [buildDependents]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="buildDependents" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="Bingo [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -168,6 +195,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.Bingo [build]" />
+        <item itemvalue="Gradle.Bingo [buildDependents]" />
         <item itemvalue="Gradle.Bingo [clean]" />
         <item itemvalue="Gradle.Bingo [dependencies]" />
       </list>
@@ -205,13 +233,31 @@
       <option name="project" value="LOCAL" />
       <updated>1784312150946</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="расширен выбор предметов рандомом, рефакторинг">
+      <option name="closed" value="true" />
+      <created>1784327951431</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1784327951431</updated>
+    </task>
+    <task id="LOCAL-00005" summary="улучшен дизайн">
+      <option name="closed" value="true" />
+      <created>1784327980934</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1784327980934</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="множественные фиксы" />
     <MESSAGE value="Добавлено отслеживание времени игры" />
     <MESSAGE value="удалена лишняя папка" />
-    <option name="LAST_COMMIT_MESSAGE" value="удалена лишняя папка" />
+    <MESSAGE value="расширен выбор предметов рандомом, рефакторинг" />
+    <MESSAGE value="улучшен дизайн" />
+    <option name="LAST_COMMIT_MESSAGE" value="улучшен дизайн" />
   </component>
 </project>

@@ -160,37 +160,14 @@ public class ObjectiveManager {
 
 
 
-    public boolean complete(
-            Material material,
-            UUID player
-    ){
+    public boolean complete(Material material){
+        BingoObjective objective = objectives.get(material);
 
-
-        BingoObjective objective =
-                objectives.get(material);
-
-
-
-        if(objective == null)
+        if(objective == null || objective.isCompleted())
             return false;
 
-
-
-        if(objective.isCompleted())
-            return false;
-
-
-
-
-        objective.complete(
-                player,
-                System.currentTimeMillis()
-        );
-
-
-
+        objective.complete();
         return true;
-
     }
 
 
